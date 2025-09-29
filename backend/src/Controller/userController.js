@@ -6,13 +6,13 @@ require('dotenv').config();
 // User registration
 exports.registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { fname, lname, email, password } = req.body;
         const existingUser = await userModel.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new userModel({ name, email, password: hashedPassword });
+        const newUser = new userModel({ fname, lname, email, password: hashedPassword });
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
@@ -55,8 +55,8 @@ exports.getUserProfile = async (req, res) => {
 // Update user profile
 exports.updateUserProfile = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        const updatedData = { name, email };
+        const { fname, lname, email, password } = req.body;
+        const updatedData = { fname, lname, email };
         if (password) {
             updatedData.password = await bcrypt.hash(password, 10);
         }
