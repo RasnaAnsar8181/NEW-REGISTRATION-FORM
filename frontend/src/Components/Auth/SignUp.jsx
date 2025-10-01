@@ -40,11 +40,11 @@ function SignUp() {
   return (
     <>
       <Container>
-        <Row className='mt-5'>
+        <Row className='mt-3'>
           <Col md={3}>
           </Col>
           <Col md={6} className='login-box'>
-            <h2 className='text-center mb-5'><b>Welcome!</b></h2>
+            <h2 className='text-center mb-3'><b>Welcome!</b></h2>
             <Form onSubmit={submitData} action={"/"}>
               <Form.Group className='mb-3'>
                 <Form.Label><b>Fist Name</b></Form.Label>
@@ -63,8 +63,11 @@ function SignUp() {
                 <Form.Control className='input1' value={formData.password} name='password' type="password" placeholder="Enter the correct Password" onChange={changeData}/>
                 <span></span>
               </Form.Group> 
-              <Button variant="success" type="submit" className='w-100 brand mt-5'>
+              <Button variant="success" type="submit" className='w-45 brand m-2'>
                 SIGN UP
+              </Button>
+              <Button variant="success" type="button" className='w-45 brand m-2' onClick={() => window.location.href = "/"}>
+                BACK
               </Button>
             </Form>
           </Col> 

@@ -1,8 +1,33 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Row, Col, Form, Button, Container} from 'react-bootstrap'  
+import axios from 'axios'
+import '../../App.css'
 
 function Login() {
   const inputref = useRef();
+  const [formData,setFormData] = useState({
+    email:"",
+    password:""
+  })
+
+  const changeData = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setFormData({...formData,[name]:value})
+  }
+  async function submitData(e){
+      e.preventDefault();
+      const res = await axios.post("http://localhost:5000/api/users/login",formData)
+      console.log(res.data,res.message,res.status)
+      if(res.message === "exist"){ 
+        alert("This email already exist")  
+      } else if(res.message === "Invalid credentials"){ 
+        alert("User have not signed up")
+      } else{
+        window.location.href = "/dashboard"
+      } 
+ } 
+  
   useEffect(() => {
     inputref.current.focus();
   }, [])
@@ -17,11 +42,11 @@ function Login() {
             <Form action={"/dashboard"} onSubmit={submitData} >
               <Form.Group className='mb-3'>
                 <Form.Label><b>Email</b></Form.Label>
-                <Form.Control className='input1' ref={inputref} type="email" placeholder="Enter your email ID" />
+                <Form.Control className='input1' ref={inputref} name='email' value={formData.email} type="email" placeholder="Enter your email ID" onChange={changeData}/>
               </Form.Group> 
               <Form.Group className='mb-3'>
                 <Form.Label><b>Password</b></Form.Label>
-                <Form.Control className='input1' type="password" placeholder="Enter the correct Password" />
+                <Form.Control className='input1' type="password" name='password' value={formData.password} placeholder="Enter the correct Password" onChange={changeData}/>
                 <span></span>
               </Form.Group> 
               <Button variant="success" type="submit" className='w-100 brand mt-5'>
