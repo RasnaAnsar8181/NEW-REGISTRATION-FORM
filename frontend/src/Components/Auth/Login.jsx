@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Row, Col, Form, Button, Container} from 'react-bootstrap'  
 import axios from 'axios'
 import '../../App.css'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
+  const navigate = useNavigate();
   const inputref = useRef();
   const [formData,setFormData] = useState({
     email:"",
@@ -24,7 +26,7 @@ function Login() {
       } else if(res.message === "Invalid credentials"){ 
         alert("User have not signed up")
       } else{
-        window.location.href = "/dashboard"
+        navigate("/dashboard",{state:formData})
       } 
  } 
   

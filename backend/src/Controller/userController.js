@@ -26,11 +26,11 @@ exports.loginUser = async (req, res) => {
         const { email, password } = req.body;
         const user = await userModel.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'exist' });
+            return res.status(400).json({ message: 'User does not exist' });
         }   
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Enter the correct password' });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(200).json({ token });
@@ -39,17 +39,19 @@ exports.loginUser = async (req, res) => {
     }   
 };
 
-// Get user profile by ID
-exports.getUserProfile = async (req, res) => {
+// Get one user by email
+exports.getOneUser = async (req, res) => {
     try {
-        const user = await userModel.findById(req.params.id).select('-password');       
+        const { email } = req.body;
+        const user = await userModel.findOne({ email })
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+            return res.status(400).json({ message: 'User does not exist' });
+        }   
         res.status(200).json(user);
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
     }
+    catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }       
 };
 
 // Update user profile
@@ -86,7 +88,7 @@ exports.deleteUser = async (req, res) => {
 // Get all users
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await userModel.find().select('-password');
+        const users = await userModel.find();
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
