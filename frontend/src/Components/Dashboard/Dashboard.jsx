@@ -16,7 +16,23 @@ function Dashboard() {
     }
     getData();
   }, [formData]);
+
+  function editData(item){
+    navigate('/Update', { state: item });
+  }
   
+  function deleteData(item){
+    async function deleteUser(){
+      const res = await axios.delete(`http://localhost:5000/api/users/${item._id}`);    
+      if(res.status === 200){ 
+          alert("Profile Deleted Successfully");
+          navigate('/dashboard');
+      } else {
+          alert("Delete Failed");
+      }
+    }
+    deleteUser();
+  }
   return (
     <div>
       <h1 className='text-center mt-3'>Dashboard</h1>
@@ -34,8 +50,8 @@ function Dashboard() {
                 <td>{item.fname}</td>
                 <td>{item.lname}</td> 
                 <td>{item.email}</td>
-                <td><Button >EDIT</Button></td>
-                <td><Button >DELETE</Button></td>
+                <td><Button onClick={()=>{editData(item)}}>EDIT</Button></td>
+                <td><Button onClick={()=>{deleteData(item)}}>DELETE</Button></td>
               </tr> 
             ))}  
             </tbody>

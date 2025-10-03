@@ -33,7 +33,7 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Enter the correct password' });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ token });
+        res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }   
@@ -43,6 +43,8 @@ exports.loginUser = async (req, res) => {
 exports.getOneUser = async (req, res) => {
     try {
         const { email } = req.body;
+        console.log(email);
+        console.log(req.body);
         const user = await userModel.findOne({ email })
         if (!user) {
             return res.status(400).json({ message: 'User does not exist' });
@@ -62,7 +64,7 @@ exports.updateUserProfile = async (req, res) => {
         if (password) {
             updatedData.password = await bcrypt.hash(password, 10);
         }
-        const user = await userModel.findByIdAndUpdate(req.params.id, updatedData, { new: true }).select('-password');
+        const user = await userModel.findByIdAndUpdate(req.params.id, updatedData, { returnDocument: 'after' });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

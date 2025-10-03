@@ -20,19 +20,18 @@ function Login() {
   async function submitData(e){
       e.preventDefault();
       const res = await axios.post("http://localhost:5000/api/users/login",formData)
-      console.log(res.data,res.message,res.status)
-      if(res.message === "exist"){ 
-        alert("This email already exist")  
-      } else if(res.message === "Invalid credentials"){ 
-        alert("User have not signed up")
-      } else{
-        navigate("/dashboard",{state:formData})
+      if(res.status === 200){ 
+          alert("Login Successful");
+          navigate('/update', { state: res.data });
+      } else {
+          alert("Login Failed");
       } 
  } 
   
   useEffect(() => {
     inputref.current.focus();
   }, [])
+
   return (
     <>
       <Container>
@@ -41,7 +40,7 @@ function Login() {
           </Col>
           <Col md={6} className='login-box'>
             <h2 className='text-center mb-5'><b>Welcome Back!</b></h2>
-            <Form action={"/dashboard"} onSubmit={submitData} >
+            <Form action={"/update"} onSubmit={submitData} >
               <Form.Group className='mb-3'>
                 <Form.Label><b>Email</b></Form.Label>
                 <Form.Control className='input1' ref={inputref} name='email' value={formData.email} type="email" placeholder="Enter your email ID" onChange={changeData}/>
